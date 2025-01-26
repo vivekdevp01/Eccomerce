@@ -67,6 +67,20 @@ async function destroyCategory(req, res, next) {
     next(error);
   }
 }
+async function getProductsForCategory(req, res, next) {
+  try {
+    const response = await CategoryService.getProductsForCategory(
+      req.params.id
+    );
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Products fetched successfully for the category",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 module.exports = {
   createCategory,
@@ -74,4 +88,5 @@ module.exports = {
   getAllCategory,
   updateCategory,
   destroyCategory,
+  getProductsForCategory,
 };

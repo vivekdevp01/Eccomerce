@@ -1,9 +1,10 @@
 const NotFound = require("../errors/notfound");
 const BadRequest = require("../errors/badRequestError");
-const { CategoryRepository } = require("../repositories");
+const { CategoryRepository, ProductRepository } = require("../repositories");
 const { StatusCodes } = require("http-status-codes");
 
 const categoryRepository = new CategoryRepository();
+const productRepository = new ProductRepository();
 
 async function createCategory(data) {
   try {
@@ -73,6 +74,19 @@ async function updateCategory(id, data) {
     throw error;
   }
 }
+async function getProductsForCategory(categoryId) {
+  try {
+    await categoryRepository.get(categoryId);
+    const response = await productRepository.getProductsForCategory(categoryId);
+    return response;
+  } catch (error) {
+    console.log(error);
+    if (error.statusCode == StatusCodes.NOT_FOUND) {
+      throw new NotFound("Cannot  fetch products", categoryId);
+    }
+    throw error;
+  }
+}
 
 module.exports = {
   createCategory,
@@ -80,4 +94,5 @@ module.exports = {
   getCategory,
   getAllCategory,
   updateCategory,
+  getProductsForCategory,
 };
