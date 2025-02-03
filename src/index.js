@@ -3,12 +3,14 @@ const { Product, Category } = require("./models");
 const { ServerConfig } = require("./config");
 const ErrorHandler = require("./utils/errorHandler");
 const responseTime = require("response-time");
+const cookieParser = require("cookie-parser");
 const apiRoutes = require("./routes");
 
 const app = express();
 app.use(responseTime());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use("/api", apiRoutes);
 

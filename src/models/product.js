@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         // onUpdate: "CASCADE",
       });
+      this.belongsToMany(models.Cart, {
+        through: models.CartProduct,
+        foreignKey: "productId",
+      });
     }
   }
   Product.init(

@@ -2,9 +2,10 @@ const BadRequest = require("../errors/badRequestError");
 const ConflictError = require("../errors/conflictError");
 const NotFound = require("../errors/notfound");
 const UnauthorizedRequest = require("../errors/unauthorizedError");
-const { UserRepository } = require("../repositories");
+const { UserRepository, CartRepository } = require("../repositories");
 const { Auth } = require("../utils/common");
 const userRepository = new UserRepository();
+const cartRepository = new CartRepository();
 
 async function signUp(data) {
   try {
@@ -42,7 +43,9 @@ async function signIn(data) {
         `The password you entered for ${data.email} is incorrect. Please try again..`
       );
     }
-    return passwordMatch;
+    const token = Auth.generateJWT({ email: user.email, id: user.id });
+    const cart = await cartRepository.findOrCreateCart(user.id);
+    return { token, cart };
   } catch (error) {
     throw error;
   }
