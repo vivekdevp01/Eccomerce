@@ -4,4 +4,5 @@ module.exports = {
   ProductRepository: require("./product-repository"),
   UserRepository: require("./user-repository"),
   CartRepository: require("./cart-repository"),
+  OrderRepository: require("./order-repository"),
 };

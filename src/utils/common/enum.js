@@ -6,8 +6,14 @@ const CART = {
   ACTIVE: "Active",
   CHECKOUT: "Checkout",
 };
+const Order = {
+  PENDING: "Pending",
+  CANCELLED: "Cancelled",
+  COMPLETED: "Completed",
+};
 
 module.exports = {
   Stock,
   CART,
+  Order,
 };

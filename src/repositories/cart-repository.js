@@ -244,6 +244,21 @@ class CartRepository extends CrudRepository {
       throw error;
     }
   }
+  async getCartByUserId(userId) {
+    try {
+      const response = await Cart.findOne({
+        where: {
+          userId,
+        },
+      });
+      if (!response) {
+        throw new NotFound("Cart not found for user ID", userId);
+      }
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = CartRepository;
