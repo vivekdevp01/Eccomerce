@@ -1,4 +1,6 @@
 const BadRequest = require("../errors/badRequestError");
+const NotFound = require("../errors/notfound");
+const UnauthorizedRequest = require("../errors/unauthorizedError");
 const { OrderRepository, CartRepository } = require("../repositories");
 const orderRepository = new OrderRepository();
 const cartRepository = new CartRepository();
@@ -61,7 +63,52 @@ async function createOrder(userId) {
     throw error;
   }
 }
+async function fetchOrderDetails(userId, orderId) {
+  try {
+    if (!orderId) {
+      throw new NotFound("Order ID is undefined");
+    }
+    const orderObject = await orderRepository.getOrder(orderId);
+    console.log("order", orderObject);
+    if (!orderObject) {
+      throw new NotFound("order not found", orderId);
+    }
+    if (orderObject.userId != userId) {
+      throw new UnauthorizedRequest(
+        "orderId",
+        `You do not have permission to modify this cart. Cart belongs to user ID ${cartExists.userId}.`
+      );
+    }
+    const response = await orderRepository.fetchDetailsOrder(orderId);
+    if (!response) {
+      throw new NotFound(`Order with ID ${orderId} not found`);
+    }
+    const order = {
+      id: response.id,
+      status: response.status,
+      createdAt: response.createdAt,
+      updatedAt: response.updatedAt,
+    };
+    let totalOrder = 0;
+    order.Products = response.Products.map((product) => {
+      totalOrder += product.price * product.OrderProduct.quantity;
+      return {
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        id: product.id,
+        quantity: product.OrderProduct.quantity,
+      };
+    });
+    order.totalOrder = totalOrder;
+    return order;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
 module.exports = {
   createOrder,
+  fetchOrderDetails,
 };
