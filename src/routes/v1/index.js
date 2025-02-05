@@ -9,7 +9,7 @@ const cartRouter = require("./cart-router");
 const orderRouter = require("./order-router");
 const router = express.Router();
 
-// router.get("/info", InfoController.info);
+router.get("/info", InfoController.info);
 router.get("/authping", AuthMiddleware.isLoggedIn, InfoController.info);
 router.use("/category", categoryRouter);
 router.use("/products", productRouter);
